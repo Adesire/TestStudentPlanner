@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -22,11 +25,12 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     EditText addNewCourse;
-    Button addNewCourseButton;
+    ImageButton addNewCourseButton;
     Button saveButton;
     Button clearButton;
     ListView courseList;
-    static ArrayList<String> arrayList = new ArrayList<String>();;
+    static ArrayList<String> arrayList = new ArrayList<String>();
+    ;
     AlertDialog.Builder mBuilder;
     ArrayAdapter<String> adapter;
 
@@ -36,31 +40,33 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        new Handler().postDelayed(new Runnable(){
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 openSecondAct();
             }
-        },SPLASH_TIME_OUT);
+        }, SPLASH_TIME_OUT);
     }
 
     public void openSecondAct() {
 
         mBuilder = new AlertDialog.Builder(MainActivity.this);
-        View mView = getLayoutInflater().inflate(R.layout.course_dialog,null);
+        View mView = getLayoutInflater().inflate(R.layout.course_dialog, null);
 
         addNewCourse = (EditText) mView.findViewById(R.id.new_course);
-        addNewCourseButton = (Button) mView.findViewById(R.id.add_course);
+        addNewCourseButton = (ImageButton) mView.findViewById(R.id.add_course);
         saveButton = (Button) mView.findViewById(R.id.save);
         clearButton = (Button) mView.findViewById(R.id.clear);
         courseList = (ListView) mView.findViewById(R.id.course_list);
+        GradientDrawable drawable = (GradientDrawable) clearButton.getBackground();
+        drawable.setColor(Color.parseColor("#F44336"));
 
 
-        adapter = new ArrayAdapter<String>(MainActivity.this,android.R.layout.simple_list_item_1,arrayList);
+        adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, arrayList);
 
         courseList.setAdapter(adapter);
 
-        if(loadArrayList(getApplicationContext()).isEmpty()){
+        if (loadArrayList(getApplicationContext()).isEmpty()) {
             //courseDialog();
             mBuilder.setView(mView);
             mBuilder.create().show();
@@ -70,38 +76,36 @@ public class MainActivity extends AppCompatActivity {
             //loadArrayListHere(getApplicationContext());
 
 
-
             saveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(arrayList.isEmpty()){
-                        Toast.makeText(MainActivity.this,"Please enter your courses",Toast.LENGTH_LONG).show();
+                    if (arrayList.isEmpty()) {
+                        Toast.makeText(MainActivity.this, "Please enter your courses", Toast.LENGTH_LONG).show();
 
-                    }else{
-                        Toast.makeText(MainActivity.this,"SUCCESSFUL",Toast.LENGTH_LONG).show();
-                        Intent mine = new Intent(MainActivity.this,DaysActivity.class);
+                    } else {
+                        Toast.makeText(MainActivity.this, "SUCCESSFUL", Toast.LENGTH_LONG).show();
+                        Intent mine = new Intent(MainActivity.this, DaysActivity.class);
                         startActivity(mine);
                     }
                 }
             });
 
 
-
-        }else{
-            Intent mine = new Intent(this,DaysActivity.class);
+        } else {
+            Intent mine = new Intent(this, DaysActivity.class);
             startActivity(mine);
         }
     }
 
-    public void courseDialog(){
+    public void courseDialog() {
         addNewCourseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String course = addNewCourse.getText().toString();
-                if(!addNewCourse.getText().toString().isEmpty()){
+                if (!addNewCourse.getText().toString().isEmpty()) {
                     arrayList.add(course);
                     saveArrayList();
-                }else{
+                } else {
                     //nothing
                 }
 
@@ -121,39 +125,39 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void saveArrayList(){
+    public void saveArrayList() {
         //USING SHARED PREFERENCES
         SharedPreferences savedContent = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = savedContent.edit();
-        editor.putInt("course_size",arrayList.size());
+        editor.putInt("course_size", arrayList.size());
 
-        for(int i=0;i<arrayList.size();i++){
+        for (int i = 0; i < arrayList.size(); i++) {
             editor.remove("course_size" + i);
-            editor.putString("course_size"+i,arrayList.get(i));
+            editor.putString("course_size" + i, arrayList.get(i));
         }
         editor.apply();
 
     }
 
-    public ArrayList<String> loadArrayList(Context context){
+    public ArrayList<String> loadArrayList(Context context) {
         SharedPreferences savedContentLoad = PreferenceManager.getDefaultSharedPreferences(context);
         arrayList.clear();
-        int size = savedContentLoad.getInt("course_size",0);
+        int size = savedContentLoad.getInt("course_size", 0);
 
-        for(int i=0;i<size;i++){
-            arrayList.add(savedContentLoad.getString("course_size" +i,null));
+        for (int i = 0; i < size; i++) {
+            arrayList.add(savedContentLoad.getString("course_size" + i, null));
         }
         return arrayList;
     }
 
-    public void loadArrayListHere(Context context){
+    public void loadArrayListHere(Context context) {
         SharedPreferences savedContentLoad = PreferenceManager.getDefaultSharedPreferences(context);
         arrayList.clear();
-        int size = savedContentLoad.getInt("course_size",0);
+        int size = savedContentLoad.getInt("course_size", 0);
 
-        for(int i=0;i<size;i++){
-            arrayList.add(savedContentLoad.getString("course_size" +i,null));
-            Log.d("Sharing",savedContentLoad.getString("course_size" +i,null));
+        for (int i = 0; i < size; i++) {
+            arrayList.add(savedContentLoad.getString("course_size" + i, null));
+            Log.d("Sharing", savedContentLoad.getString("course_size" + i, null));
         }
     }
 
