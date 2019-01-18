@@ -18,6 +18,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,7 +41,7 @@ import java.util.Calendar;
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 
-public class DayDetailFragment extends Fragment implements AdapterView.OnItemSelectedListener, TimeTable {
+public class DayDetailFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private View mView;
     public static final String NOTIFY_MSG = "NOTIFY_MSG";
@@ -55,7 +56,7 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
     ArrayList<String> userOrder = new ArrayList<>();
 
     String spinItem, courseFromTime, courseToTime, totalCourseInfo, noteTime;
-    Button save, fromBtn, toBtn, noteBtn;
+    Button saveToTableBtn, fromBtn, toBtn, noteBtn;
     TextView from, to;
     NotificationManager notifyMe;
     static int youMin, youHr, NOTE_HR, NOTE_MIN;
@@ -68,6 +69,7 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
     private static final String ACTION_NOTIFY = "com.example.android.teststudentplanner.ACTION_NOTIFY";
 
     AlarmManager alarmManager;
+    Toolbar fragmentAppBar;
     private String day, appBarTitle;
 
     public DayDetailFragment() {
@@ -92,6 +94,7 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
         super.onCreate(savedInstanceState);
         day = getArguments().getString("day");
         appBarTitle = getArguments().getString("toolbar_title");
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -100,10 +103,35 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
         fromBtn = mView.findViewById(R.id.fromBtn);
         toBtn = mView.findViewById(R.id.toBtn);
         noteBtn = mView.findViewById(R.id.saveNotes);
+        saveToTableBtn = mView.findViewById(R.id.saveTableBtn);
+        fragmentAppBar = mView.findViewById(R.id.toolbar2);
 
-        showFromTimePickerDialog(fromBtn);
-        showToTimePickerDialog(toBtn);
-        showNoteTimePickerDialog(noteBtn);
+        getActivityCast().setSupportActionBar(fragmentAppBar);
+        //getActivityCast().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        saveToTableBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveToTable();
+            }
+        });
+
+        fragmentAppBar.setTitle(appBarTitle.toUpperCase());
+
+        fromBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFromTimePickerDialog();
+            }
+        });
+        toBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showToTimePickerDialog();
+            }
+        });
+        /*showFromTimePickerDialog(fromBtn);
+        showToTimePickerDialog(toBtn);*/
 
         alarmManager = (AlarmManager) getActivityCast().getSystemService(Context.ALARM_SERVICE);
 
@@ -114,15 +142,15 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
 
-                AlertDialog.Builder buildIt = new AlertDialog.Builder(getActivityCast().getApplicationContext());
-                View mView = getLayoutInflater().inflate(R.layout.notes_dialog, null);
+                AlertDialog.Builder buildIt = new AlertDialog.Builder(getActivityCast());
+                View mNoteView = getLayoutInflater().inflate(R.layout.notes_dialog, null);
 
-                editNote = (EditText) mView.findViewById(R.id.notes);
-                mTextView = (TextView) mView.findViewById(R.id.textView);
-                saveNote = (Button) mView.findViewById(R.id.saveNotes);
-                clearNote = (Button) mView.findViewById(R.id.clearNotes);
-                timeNote = (Button) mView.findViewById(R.id.timeNotes);
-                buildIt.setView(mView);
+                editNote = (EditText) mNoteView.findViewById(R.id.notes);
+                mTextView = (TextView) mNoteView.findViewById(R.id.textView);
+                saveNote = (Button) mNoteView.findViewById(R.id.saveNotes);
+                clearNote = (Button) mNoteView.findViewById(R.id.clearNotes);
+                timeNote = (Button) mNoteView.findViewById(R.id.timeNotes);
+                buildIt.setView(mNoteView);
                 buildIt.setPositiveButton(android.R.string.ok, null)
                         .create().show();
 
@@ -147,7 +175,7 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
                 timeNote.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showNoteTimePickerDialog(v);
+                        showNoteTimePickerDialog();
                     }
                 });
 
@@ -168,8 +196,6 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
         timeTable = (ListView) mView.findViewById(R.id.timeTableList);
         timeTable.setAdapter(table);
 
-
-        save = (Button) mView.findViewById(R.id.saveTableBtn);
 
         spin = (Spinner) mView.findViewById(R.id.course_spinner);
 
@@ -200,21 +226,13 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_day_detail, container, false);
-
         return mView;
     }
 
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }*/
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -299,28 +317,41 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
         return super.onOptionsItemSelected(item);
     }
 
-    public void showFromTimePickerDialog(View view) {
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TimePickerFragment time = new TimePickerFragment();
-                time.x = 0;
-                time.show(getFragmentManager(), getString(R.string.time_picker));
-            }
-        });
-
+    public void showFromTimePickerDialog() {
+        TimePickerFragment time = new TimePickerFragment();
+        time.setTargetFragment(DayDetailFragment.this,0);
+        time.show(getFragmentManager(), getString(R.string.time_picker));
     }
 
-    public void showToTimePickerDialog(View view) {
+    public void showToTimePickerDialog() {
         TimeToFragment time2 = new TimeToFragment();
-        time2.x = 0;
+        time2.setTargetFragment(DayDetailFragment.this,1);
         time2.show(getFragmentManager(), getString(R.string.time_picker));
     }
 
-    public void showNoteTimePickerDialog(View view) {
+    public void showNoteTimePickerDialog() {
         TimeNoteFragment time3 = new TimeNoteFragment();
-        time3.x = 0;
+        time3.setTargetFragment(DayDetailFragment.this,2);
         time3.show(getFragmentManager(), getString(R.string.time_picker));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == 0){
+            int hour = data.getIntExtra(TimePickerFragment.HOUR_OF_DAY,0);
+            int minute = data.getIntExtra(TimePickerFragment.MINUTE,0);
+            processTimePickerResult(hour,minute);
+        }
+        if(requestCode == 1){
+            int hour_to = data.getIntExtra(TimeToFragment.TO_HOUR_OF_DAY,0);
+            int minute_to = data.getIntExtra(TimeToFragment.TO_HOUR_OF_DAY,0);
+            processTimeToPickerResult(hour_to,minute_to);
+        }
+        if(requestCode == 2){
+            int hour_note = data.getIntExtra(TimeNoteFragment.NOTE_HOUR_OF_DAY,0);
+            int minute_note = data.getIntExtra(TimeNoteFragment.NOTE_MINUTE,0);
+            processTimeNotePickerResult(hour_note,minute_note);
+        }
     }
 
     public void processTimePickerResult(int hourOfDay, int minute) {
@@ -398,9 +429,9 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
 
     }
 
-    public void saveToTable(View view) {
+    public void saveToTable() {
         if (courseFromTime == null || courseToTime == null) {
-            AlertDialog.Builder timeChange = new AlertDialog.Builder(getActivityCast().getApplicationContext());
+            AlertDialog.Builder timeChange = new AlertDialog.Builder(getActivityCast());
             timeChange.setTitle("ERROR")
                     .setMessage("PLEASE INPUT TIME")
                     .setPositiveButton(android.R.string.ok, null)
@@ -433,7 +464,7 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 final Object tableItem = parent.getItemAtPosition(position);
                 //Toast.makeText(Monday.this,"SUCCESSFUL",Toast.LENGTH_LONG).show();
-                AlertDialog.Builder build = new AlertDialog.Builder(getActivityCast().getApplicationContext());
+                AlertDialog.Builder build = new AlertDialog.Builder(getActivityCast());
                 build.setIcon(android.R.drawable.ic_dialog_alert)
                         .setMessage("Remove from List?")
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {

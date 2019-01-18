@@ -3,6 +3,8 @@ package com.example.android.teststudentplanner;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -16,7 +18,10 @@ import java.util.Calendar;
  */
 public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 
-    int x;
+    int hour,minute;
+
+    static String HOUR_OF_DAY = "HOUR_OF_DAY";
+    static String MINUTE = "MINUTE";
 
     public TimePickerFragment() {
         // Required empty public constructor
@@ -36,9 +41,21 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-        DayDetailFragment fragment = (DayDetailFragment) getTargetFragment();
-        fragment.processTimePickerResult(hourOfDay, minute);
+        /*DaysActivity fragmentActivity = (DaysActivity)getActivity();
+        fragmentActivity.processMyTimePickerResult(hourOfDay, minute);*/
 
+        hour = hourOfDay;
+        this.minute = minute;
+        sendResult(0);
 
     }
+
+    private void sendResult(int REQUEST_CODE){
+        Intent intent = new Intent();
+        intent.putExtra(HOUR_OF_DAY,hour);
+        intent.putExtra(MINUTE,minute);
+        getTargetFragment().onActivityResult(getTargetRequestCode(),
+                REQUEST_CODE, intent);
+    }
+
 }

@@ -6,6 +6,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".DayDetailFragment">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
+    </android.support.v7.widget.Toolbar>
+
     <Spinner
         android:id="@+id/course_spinner"
         android:layout_width="94dp"
@@ -13,6 +20,7 @@
         android:layout_alignBottom="@+id/couse_title"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_below="@id/toolbar2"
         android:layout_marginEnd="21dp"
         android:layout_marginRight="21dp"
         android:layout_toRightOf="@+id/couse_title"
@@ -25,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/toolbar2"
         android:paddingBottom="10dp"
         android:text="@string/course_title"
         android:textSize="24sp"
