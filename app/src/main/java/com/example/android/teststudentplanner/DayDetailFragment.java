@@ -50,9 +50,9 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
     ArrayAdapter<String> spinAdapter, table;
     ListView timeTable;
 
-    ArrayList<String> list = new ArrayList<String>();
-    ArrayList<Long> list2 = new ArrayList<Long>();
-    ArrayList<Long> list3 = new ArrayList<Long>();
+    ArrayList<String> list = new ArrayList<>();
+    ArrayList<Long> list2 = new ArrayList<>();
+    ArrayList<Long> list3 = new ArrayList<>();
     ArrayList<String> userOrder = new ArrayList<>();
 
     String spinItem, courseFromTime, courseToTime, totalCourseInfo, noteTime;
@@ -188,7 +188,7 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
         notifyMe = (NotificationManager) getActivityCast().getSystemService(NOTIFICATION_SERVICE);
 
 
-        table = new ArrayAdapter<String>(getActivityCast().getApplicationContext(), android.R.layout.simple_list_item_1, list);
+        table = new ArrayAdapter<>(getActivityCast().getApplicationContext(), android.R.layout.simple_list_item_1, list);
 
         from = (TextView) mView.findViewById(R.id.fromTxt);
         to = (TextView) mView.findViewById(R.id.toTxt);
@@ -199,7 +199,7 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
 
         spin = (Spinner) mView.findViewById(R.id.course_spinner);
 
-        spinAdapter = new ArrayAdapter<String>(getActivityCast().getApplicationContext(), android.R.layout.simple_list_item_1, new MainActivity().loadArrayList(getActivityCast().getApplicationContext()));
+        spinAdapter = new ArrayAdapter<>(getActivityCast().getApplicationContext(), android.R.layout.simple_list_item_1, new MainActivity().loadArrayList(getActivityCast().getApplicationContext()));
 
         spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -253,7 +253,7 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
                 startActivity(mine);
                 if (!(new MainActivity().loadArrayList(getActivityCast().getApplicationContext()).equals(new CourseList().loadArrayList(getActivityCast().getApplicationContext())))) {
 
-                    spinAdapter = new ArrayAdapter<String>(getActivityCast().getApplicationContext(), android.R.layout.simple_list_item_1, new CourseList().loadArrayList(getActivityCast().getApplicationContext()));
+                    spinAdapter = new ArrayAdapter<>(getActivityCast().getApplicationContext(), android.R.layout.simple_list_item_1, new CourseList().loadArrayList(getActivityCast().getApplicationContext()));
                     spin.setAdapter(spinAdapter);
                 }
                 return true;
@@ -261,11 +261,11 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
                 if (list.isEmpty()) {
                     list2.clear();
                     list3.clear();
-                    ;
+
                     Toast.makeText(getActivityCast().getApplicationContext(), "EMPTY TABLE", Toast.LENGTH_LONG).show();
                     return true;
                 } else {
-                    AlertDialog.Builder surity = new AlertDialog.Builder(getActivityCast().getApplicationContext());
+                    AlertDialog.Builder surity = new AlertDialog.Builder(getActivityCast());
                     surity.setTitle("Alert")
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .setMessage("Are you sure you want to reset the table?")

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 public class CourseList extends AppCompatActivity {
 
     EditText addNewCourse;
-    Button addNewCourseButton;
+    ImageButton addNewCourseButton;
     Button saveButton;
     Button clearButton;
     ListView courseList;
@@ -33,7 +34,7 @@ public class CourseList extends AppCompatActivity {
         setContentView(R.layout.course_dialog);
 
        addNewCourse = (EditText)findViewById(R.id.new_course);
-       addNewCourseButton = (Button)findViewById(R.id.add_course);
+       addNewCourseButton = (ImageButton)findViewById(R.id.add_course);
         saveButton = (Button)findViewById(R.id.save);
         clearButton = (Button)findViewById(R.id.clear);
         courseList = (ListView)findViewById(R.id.course_list);
