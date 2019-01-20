@@ -11,6 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.Calendar;
+
 public class DaysActivity extends AppCompatActivity {
 
     Button monday, tuesday, wednesday, thursday, friday;
@@ -28,31 +30,31 @@ public class DaysActivity extends AppCompatActivity {
 
     public void monWork(View view) {
         dayName = "Monday";
-        replaceDayFragment(DayDetailFragment.newInstance("mon", dayName),
+        replaceDayFragment(DayDetailFragment.newInstance("mon", dayName, Calendar.MONDAY),
                 true);
     }
 
     public void tueWork(View view) {
         dayName = "Tuesday";
-        replaceDayFragment(DayDetailFragment.newInstance("tue", dayName),
+        replaceDayFragment(DayDetailFragment.newInstance("tue", dayName,Calendar.TUESDAY),
                 true);
     }
 
     public void wedWork(View view) {
         dayName = "Wednesday";
-        replaceDayFragment(DayDetailFragment.newInstance("wed", dayName),
+        replaceDayFragment(DayDetailFragment.newInstance("wed", dayName,Calendar.WEDNESDAY),
                 true);
     }
 
     public void thurWork(View view) {
         dayName = "Thursday";
-        replaceDayFragment(DayDetailFragment.newInstance("thu", dayName),
+        replaceDayFragment(DayDetailFragment.newInstance("thu", dayName,Calendar.THURSDAY),
                 true);
     }
 
     public void friWork(View view) {
         dayName = "Friday";
-        replaceDayFragment(DayDetailFragment.newInstance("fri", dayName),
+        replaceDayFragment(DayDetailFragment.newInstance("fri", dayName,Calendar.FRIDAY),
                 true);
     }
 

@@ -59,7 +59,7 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
     Button saveToTableBtn, fromBtn, toBtn, noteBtn;
     TextView from, to;
     NotificationManager notifyMe;
-    static int youMin, youHr, NOTE_HR, NOTE_MIN;
+    static int youMin, youHr, NOTE_HR, NOTE_MIN,WEEKDAY;
     boolean isChecked = true;
 
     EditText editNote;
@@ -76,11 +76,12 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
         // Required empty public constructor
     }
 
-    public static DayDetailFragment newInstance(String daySavedSharePreference, String appBartitle) {
+    public static DayDetailFragment newInstance(String daySavedSharePreference, String appBartitle, int weekday) {
         DayDetailFragment fragment = new DayDetailFragment();
         Bundle b = new Bundle();
         b.putString("day", daySavedSharePreference);
         b.putString("toolbar_title", appBartitle);
+        b.putInt("weekday",weekday);
         fragment.setArguments(b);
         return fragment;
     }
@@ -94,6 +95,7 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
         super.onCreate(savedInstanceState);
         day = getArguments().getString("day");
         appBarTitle = getArguments().getString("toolbar_title");
+        WEEKDAY = getArguments().getInt("weekday");
         setHasOptionsMenu(true);
     }
 
@@ -130,8 +132,7 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
                 showToTimePickerDialog();
             }
         });
-        /*showFromTimePickerDialog(fromBtn);
-        showToTimePickerDialog(toBtn);*/
+
 
         alarmManager = (AlarmManager) getActivityCast().getSystemService(Context.ALARM_SERVICE);
 
@@ -551,8 +552,8 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
         list2.add(triggerTime);
 
         for (int i = 0; i < list2.size(); i++) {
-            if (Calendar.MONDAY == dayOfWeek) {
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivityCast().getApplicationContext(), i, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            if (WEEKDAY == dayOfWeek) {
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), i, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                 if (a == 1) {
                     Log.e("TAG", list2.get(i).toString());
@@ -586,7 +587,7 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
         list3.add(triggerTime);
 
         for (int i = 0; i < list3.size(); i++) {
-            if (Calendar.MONDAY == dayOfWeek) {
+            if (WEEKDAY == dayOfWeek) {
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivityCast().getApplicationContext(), 100 + i, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                 if (a == 1) {
@@ -618,7 +619,7 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
 
         long triggerTime = calN.getTimeInMillis();
 
-        if (dayOfWeek == Calendar.MONDAY) {
+        if (dayOfWeek == WEEKDAY) {
             if (a == 1) {
                 Toast.makeText(getActivityCast(), "Alarm SET", Toast.LENGTH_SHORT).show();
                 alarmManager.set(AlarmManager.RTC, triggerTime, notifyPendingIntent);
@@ -629,9 +630,9 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
     }
 
     public Notification getNotification(String content) {
-        PendingIntent contentPendingIntent = PendingIntent.getActivity(getActivityCast().getApplicationContext(), 0, new Intent(getActivityCast().getApplicationContext(), getClass()), PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent contentPendingIntent = PendingIntent.getActivity(getActivity(), 0, new Intent(getActivity(), getClass()), PendingIntent.FLAG_UPDATE_CURRENT);
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        Notification.Builder builder = new Notification.Builder(getActivityCast().getApplicationContext());
+        Notification.Builder builder = new Notification.Builder(getActivity());
         builder.setContentTitle("The Student Planner");
         builder.setContentText(content);
         builder.setSmallIcon(R.drawable.ic_notification_2);

@@ -6,6 +6,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".DayDetailFragment">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/splog"
+        android:background="#FFFFFF"/>
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar2"
         android:layout_width="match_parent"
@@ -58,7 +66,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/time"
-        android:onClick="showFromTimePickerDialog"
         android:text="@string/from"
         android:textSize="14sp"
         android:layout_alignParentLeft="true"
@@ -71,8 +78,7 @@
         android:layout_alignEnd="@+id/course_spinner"
         android:layout_below="@+id/course_spinner"
         android:text="@string/save"
-        android:layout_alignRight="@+id/course_spinner"
-        android:onClick="saveToTable"/>
+        android:layout_alignRight="@+id/course_spinner"/>
 
     <ListView
         android:id="@+id/timeTableList"
@@ -88,7 +94,6 @@
         android:layout_width="47dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/time"
-        android:onClick="showToTimePickerDialog"
         android:text="@string/to"
         android:layout_toRightOf="@+id/fromBtn"
         android:padding="10dp"
@@ -157,4 +162,5 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         app:srcCompat="@drawable/ic_action_name_write_note" />
+
 </RelativeLayout>
