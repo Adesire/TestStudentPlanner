@@ -345,7 +345,7 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
         }
         if(requestCode == 1){
             int hour_to = data.getIntExtra(TimeToFragment.TO_HOUR_OF_DAY,0);
-            int minute_to = data.getIntExtra(TimeToFragment.TO_HOUR_OF_DAY,0);
+            int minute_to = data.getIntExtra(TimeToFragment.TO_MINUTE,0);
             processTimeToPickerResult(hour_to,minute_to);
         }
         if(requestCode == 2){
@@ -538,7 +538,7 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
         notifyIntent.putExtra(AlarmReceiver.NOTIFICATION, notification);
 
         int yourHour = youHr;
-        int yourMins = youMin - 15;
+        int yourMins = youMin-15;
 
         Calendar cal = Calendar.getInstance();
         //cal.setTimeInMillis(System.currentTimeMillis());
@@ -573,7 +573,7 @@ public class DayDetailFragment extends Fragment implements AdapterView.OnItemSel
         notifyIntent.putExtra(AlarmReceiver.NOTIFICATION, notification);
 
         int yourHour = youHr;
-        int yourMins = youMin - 10;
+        int yourMins = youMin-10;
 
         Calendar cal = Calendar.getInstance();
         //cal.setTimeInMillis(System.currentTimeMillis());
